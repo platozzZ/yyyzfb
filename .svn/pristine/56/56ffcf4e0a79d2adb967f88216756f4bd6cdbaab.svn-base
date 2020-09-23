@@ -1,0 +1,81 @@
+<script>
+import Vue from 'vue'
+export default {
+  onLaunch: function(e) {
+	  console.log(e)
+	  uni.setNavigationBarTitle({
+		title:'设置标题(可以是变量)'
+	  })
+	  let that = this
+	  let thatUrl = window.location.href;
+	  
+	  let statusBar = this.getParam(thatUrl,'statusbar')
+	  console.log('statusBar:',statusBar);
+	  Vue.prototype.StatusBar = statusBar - 0
+	  Vue.prototype.CustomBar = statusBar - 0 + 45
+	  // console.log('StatusBar:',that.StatusBar);
+	  // console.log('statusBar:',statusBar);
+	  console.log(that);
+	  // alert(that.StatusBar)
+    if (e.query.channel) {
+      // wx.hideTabBar();
+      uni.setStorage({
+        key: "channel",
+        data: e.query.channel
+      });
+    }
+    if (e.query.phone ) {
+      uni.setStorage({
+        key: "comephone",
+        data: e.query.phone
+      });
+    }
+    if (!e.query.phone&&e.query.channel) {
+      uni.removeStorageSync("userpic");
+      uni.removeStorageSync("token");
+      uni.removeStorageSync("username");
+    }
+	
+  },
+  onShow: function() {},
+  onHide: function() {
+    console.log("App Hide");
+  },
+  methods:{
+		//获取url地址栏参数值
+		getParam(path, name) {
+	        var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
+	        if (reg.test(path))
+	        return unescape(RegExp.$2.replace(/\+/g, " "));
+	        return "";
+        },
+  }
+};
+</script>
+
+<style>
+@import "static/css/common.css";
+@import "colorui/icon.css";
+.cu-custom .cu-bar .content image{
+	width: 90px;
+	height: auto ;
+}
+.bar-action{
+	font-size: 20px;
+}
+/* 解决头条小程序组件内引入字体不生效的问题 */
+/* #ifdef MP-TOUTIAO */
+@font-face {
+  font-family: uniicons;
+  src: url("/static/uni.ttf");
+}
+/* #endif */
+body {
+  background-color: #f3f3f3;
+}
+/* #ifdef H5 */
+uni-page-head {
+  display: none;
+}
+/* #endif */
+</style>
